@@ -31,66 +31,27 @@ class laminaProcesador extends JPanel{
 		JPanel laminaMenu=new JPanel();
 		/*****menu principal****/
 		JMenuBar mi_barra=new JMenuBar();
-		JMenu fuente = new JMenu("Fuente");
-		JMenu estilo = new JMenu("Estilo");
-		JMenu tamano = new JMenu("Tamaño");
+		fuente = new JMenu("Fuente");
+		estilo = new JMenu("Estilo");
+		tamano = new JMenu("Tamaño");
+		//------------------
+		configura_menu("Arial","Fuente","Arial",9,10);
+		configura_menu("Coursier","Fuente","Courier",9,10);
+		configura_menu("Verdana","Fuente","Verdana",9,10);
 		
+		//-----estos elementos no cambia la fuente
+		configura_menu("Negrita","Estilo","",Font.BOLD,1);
+		configura_menu("Cursiva","Estilo","",Font.ITALIC,1);
+		//---------
+		configura_menu("12","Tamano","",9,12);
+		configura_menu("16","Tamano","",9,16);
+		configura_menu("20","Tamano","",9,20);
+		configura_menu("24","Tamano","",9,24);
+		//---------
 		mi_barra.add(fuente);
 		mi_barra.add(estilo);
 		mi_barra.add(tamano);
 		
-		/******Sub Elementos******/
-		JMenuItem arial=new JMenuItem("Arial");
-		arial.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-				mi_area.setFont(new Font("Arial",Font.PLAIN,12));
-				
-				
-			}
-		});
-		
-		//--------
-		JMenuItem courier=new JMenuItem("Courier");
-		//----------
-		courier.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-				mi_area.setFont(new Font("Courier",Font.PLAIN,12));
-				
-				
-			}
-		});
-		//--------
-		JMenuItem verdana=new JMenuItem("Verdana");
-		verdana.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-				mi_area.setFont(new Font("Verdana",Font.PLAIN,12));
-				
-				
-			}
-		});
-		
-		//----
-		fuente.add(arial); fuente.add(courier); fuente.add(verdana);
-		//-----------------
-		JMenuItem negrita=new JMenuItem("Negrillas");
-		JMenuItem cursiva=new JMenuItem("Cursiva");
-		
-		estilo.add(negrita); estilo.add(cursiva);
-		//--------
-		
-		JMenuItem arial12=new JMenuItem("12");
-		JMenuItem arial16=new JMenuItem("16");
-		JMenuItem arial20=new JMenuItem("20");
-		JMenuItem arial24=new JMenuItem("24");
-		
-		tamano.add(arial12);tamano.add(arial16);
-		tamano.add(arial20); tamano.add(arial24);
 		
 		/******/
 		
@@ -101,6 +62,56 @@ class laminaProcesador extends JPanel{
 		add(mi_area,BorderLayout.CENTER);
 		
 	}
+	public void configura_menu(String rotulo,String menu,String tipo_letra,int estilos,int tam){
+		
+		JMenuItem elem_menu=new JMenuItem(rotulo);
+		/*********/
+		if(menu=="Fuente"){fuente.add(elem_menu);}
+		else if(menu=="Estilo"){estilo.add(elem_menu);}
+		else if(menu=="Tamano"){tamano.add(elem_menu);}
+		
+		elem_menu.addActionListener(new gestiona_eventos(rotulo,tipo_letra,estilos,tam));
+	}
+	private class gestiona_eventos implements ActionListener{
+		//-----
+		String tipo_texto, menu;
+		int estiloLetra,tamanoLetra;
+		//------
+		gestiona_eventos(String elemento,String texto2,int estilo2,int tam_letra){
+			tipo_texto=texto2;
+			estiloLetra=estilo2;
+			tamanoLetra=tam_letra;
+			menu=elemento;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			letras=mi_area.getFont();
+			System.out.println("");
+			
+			if(menu=="Arial" || menu=="Courier" || menu=="Verdana"){
+				estiloLetra=letras.getStyle();
+				tamanoLetra=letras.getSize();
+			}
+			else if(menu=="Cursiva" || menu=="Negrita"){
+				if(letras.getStyle()==1 || letras.getStyle()==2){
+					estiloLetra=3;
+				}
+				tipo_texto=letras.getFontName();
+				tamanoLetra=letras.getSize();
+			}
+			else if(menu=="12" || menu=="16" || menu=="20" || menu=="24"){
+				estiloLetra=letras.getStyle();
+				tipo_texto=letras.getFontName();
+			}
+			mi_area.setFont(new Font(tipo_texto,estiloLetra,tamanoLetra));
+			
+		}
+		
+	}
+	private JMenu fuente,estilo,tamano;
+	private Font letras;
 	private JTextPane mi_area ;
 	/*********clase interna*********/
 }
